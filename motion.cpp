@@ -1,8 +1,14 @@
 #include <stdio.h>
 #include <math.h>
-#ifdef HAS_TERMINAL
-#include <terminal.h>
-#else
+
+#include "config.h"
+#include "function.h"
+#include "motion.h"
+#include "kinematic.h"
+#include "mapping.h"
+#include "leds.h"
+#include "motors.h"
+
 #define TERMINAL_PARAMETER_BOOL(name, desc, def) \
     bool name = def;
 #define TERMINAL_PARAMETER_FLOAT(name, desc, def) \
@@ -11,21 +17,6 @@
     double name = def;
 #define TERMINAL_PARAMETER_INT(name, desc, def) \
     int name = def;
-#endif
-#ifdef __EMSCRIPTEN__
-#include <emscripten/bind.h>
-#endif
-#ifdef RHOCK
-#include <rhock/event.h>
-#include <rhock/stream.h>
-#endif
-#include "config.h"
-#include "function.h"
-#include "motion.h"
-#include "kinematic.h"
-#include "mapping.h"
-#include "leds.h"
-#include "motors.h"
 
 // Angles for the legs motor
 float l1[4], l2[4], l3[4];
@@ -76,20 +67,6 @@ TERMINAL_PARAMETER_FLOAT(turn, "Turn", 0.0);
 
 // Front delta h
 TERMINAL_PARAMETER_FLOAT(frontH, "Front delta H", 0.0);
-
-#ifdef HAS_TERMINAL
-TERMINAL_COMMAND(toggleBackLegs, "Toggle back legs")
-{
-    if (backLegs == 0) backLegs = 1;
-    else if (backLegs == 1) backLegs = 0;
-}
-
-TERMINAL_COMMAND(toggleCrab, "Toggle crab mode")
-{
-    if (crab == 0) crab = 30;
-    else if (crab == 30) crab = 0;
-}
-#endif
 
 // Gait selector
 #define GAIT_WALK       0
@@ -336,38 +313,3 @@ float motion_get_turn()
 {
     return turn;
 }
-
-#ifdef RHOCK
-void rhock_on_monitor()
-{
-    rhock_stream_begin(RHOCK_STREAM_USER);
-    // Motion parameters
-    rhock_stream_append_int(RHOCK_NUMBER_TO_VALUE(last_t));
-    rhock_stream_append_int(RHOCK_NUMBER_TO_VALUE(dx));
-    rhock_stream_append_int(RHOCK_NUMBER_TO_VALUE(dy));
-    rhock_stream_append_int(RHOCK_NUMBER_TO_VALUE(turn));
-    rhock_stream_append_int(RHOCK_NUMBER_TO_VALUE(freq));
-    // Angles
-    for (int i=0; i<12; i++) {
-        rhock_stream_append_short((uint16_t)((int16_t)motion_get_motor(i)*10));
-    }
-    // Leds
-    led_stream_state();
-    // Is enabled?
-    rhock_stream_append(motors_enabled());
-    rhock_stream_end();
-}
-#endif
-
-#ifdef __EMSCRIPTEN__
-using namespace emscripten;
-
-EMSCRIPTEN_BINDINGS(motion) {
-    function("motion_get_dx", &motion_get_dx);
-    function("motion_get_dy", &motion_get_dy);
-    function("motion_get_turn", &motion_get_turn);
-    function("motion_init", &motion_init);
-    function("motion_tick", &motion_tick);
-    function("motion_get_motor", &motion_get_motor);
-}
-#endif

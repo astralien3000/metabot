@@ -1,7 +1,3 @@
-#ifdef HAS_DXL
-#include <dxl.h>
-#endif
-
 /**
  * This is the dimension of the legs, in mm
  */
@@ -47,43 +43,41 @@ static int signs[] = {
     1           // Sign of the end-legs motors
 };
 
-#ifdef HAS_DXL
 /**
  * This is the servos configuration, you can change the zero 
  * or the min/max limits here
  */
 inline void config_init()
 {
-    // First leg
-    dxl_set_zero    (servos_order[0], 0.00);
-    dxl_set_min_max (servos_order[0], -90, 90);
-    dxl_set_zero    (servos_order[1], 0.00);
-    dxl_set_min_max (servos_order[1], -100, 100);
-    dxl_set_zero    (servos_order[2], 0.00);
-    dxl_set_min_max (servos_order[2], -145, 145);
+//    // First leg
+//    dxl_set_zero    (servos_order[0], 0.00);
+//    dxl_set_min_max (servos_order[0], -90, 90);
+//    dxl_set_zero    (servos_order[1], 0.00);
+//    dxl_set_min_max (servos_order[1], -100, 100);
+//    dxl_set_zero    (servos_order[2], 0.00);
+//    dxl_set_min_max (servos_order[2], -145, 145);
 
-    // Second leg
-    dxl_set_zero    (servos_order[3], 0.00);
-    dxl_set_min_max (servos_order[3], -90, 90);
-    dxl_set_zero    (servos_order[4], 0.00);
-    dxl_set_min_max (servos_order[4], -100, 100);
-    dxl_set_zero    (servos_order[5], 0.00);
-    dxl_set_min_max (servos_order[5], -145, 145);
+//    // Second leg
+//    dxl_set_zero    (servos_order[3], 0.00);
+//    dxl_set_min_max (servos_order[3], -90, 90);
+//    dxl_set_zero    (servos_order[4], 0.00);
+//    dxl_set_min_max (servos_order[4], -100, 100);
+//    dxl_set_zero    (servos_order[5], 0.00);
+//    dxl_set_min_max (servos_order[5], -145, 145);
 
-    // Third leg
-    dxl_set_zero    (servos_order[6], 0.00);
-    dxl_set_min_max (servos_order[6], -90, 90);
-    dxl_set_zero    (servos_order[7], 0.00);
-    dxl_set_min_max (servos_order[7], -100, 100);
-    dxl_set_zero    (servos_order[8], 0.00);
-    dxl_set_min_max (servos_order[8], -145, 145);
+//    // Third leg
+//    dxl_set_zero    (servos_order[6], 0.00);
+//    dxl_set_min_max (servos_order[6], -90, 90);
+//    dxl_set_zero    (servos_order[7], 0.00);
+//    dxl_set_min_max (servos_order[7], -100, 100);
+//    dxl_set_zero    (servos_order[8], 0.00);
+//    dxl_set_min_max (servos_order[8], -145, 145);
 
-    // Fourth leg
-    dxl_set_zero    (servos_order[9], 0.00);
-    dxl_set_min_max (servos_order[9], -90, 90);
-    dxl_set_zero    (servos_order[10], 0.00);
-    dxl_set_min_max (servos_order[10], -100, 100);
-    dxl_set_zero    (servos_order[11], 0);
-    dxl_set_min_max (servos_order[11], -145, 145);
+//    // Fourth leg
+//    dxl_set_zero    (servos_order[9], 0.00);
+//    dxl_set_min_max (servos_order[9], -90, 90);
+//    dxl_set_zero    (servos_order[10], 0.00);
+//    dxl_set_min_max (servos_order[10], -100, 100);
+//    dxl_set_zero    (servos_order[11], 0);
+//    dxl_set_min_max (servos_order[11], -145, 145);
 }
-#endif

@@ -1,14 +1,12 @@
 #include <stdio.h>
 #include "leds.h"
-#ifdef RHOCK
-#include <rhock/stream.h>
-#endif
-#ifndef __EMSCRIPTEN__
-#include <dxl.h>
-#endif
+
+#include <dynamixel.h>
 
 static char leds[12];
 static bool leds_custom_flag;
+
+extern uart_half_duplex_t stream;
 
 static int led_value_to_dxl(int val)
 {
@@ -35,9 +33,10 @@ void led_set(int index, int value, bool custom)
         leds_custom_flag = true;
     }
     leds[index-1] = value;
-#ifndef __EMSCRIPTEN__
-    dxl_write_byte(index, DXL_LED, led_value_to_dxl(value));
-#endif
+
+    dynamixel_t dev;
+    dynamixel_init(&dev, &stream, index);
+    dynamixel_write8(&dev, XL320_LED, led_value_to_dxl(value));
 }
 
 void led_set_all(int value, bool custom)
@@ -48,19 +47,8 @@ void led_set_all(int value, bool custom)
     for (unsigned int i=0; i<sizeof(leds); i++) {
         leds[i] = value;
     }
-#ifndef __EMSCRIPTEN__
-    dxl_write_byte(DXL_BROADCAST, DXL_LED, led_value_to_dxl(value));
-#endif
-}
 
-void led_stream_state()
-{
-#ifdef RHOCK
-    for (unsigned int i=0; i<sizeof(leds);) {
-        uint8_t v = 0;
-        v += leds[i++]<<4;
-        v += leds[i++];
-        rhock_stream_append(v);
-    }
-#endif
+    dynamixel_t dev;
+    dynamixel_init(&dev, &stream, 0xFF);
+    dynamixel_write8(&dev, XL320_LED, led_value_to_dxl(value));
 }
